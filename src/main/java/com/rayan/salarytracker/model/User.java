@@ -2,9 +2,7 @@ package com.rayan.salarytracker.model;
 
 
 import com.rayan.salarytracker.core.enumuartion.UserRole;
-import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -14,35 +12,37 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "users")
-public class User extends PanacheEntity {
+public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @NotBlank(message = "Username is required")
     @Column(unique = true)
-    public String username;
+    private String username;
 
     @NotBlank(message = "Email is required")
-    @Email(message = "Email must be valid")
     @Column(unique = true)
-    public String email;
+    private String email;
 
     @NotBlank(message = "Password is required")
-    public String password;
+    private String password;
 
     @Enumerated(EnumType.STRING)
-    public UserRole role = UserRole.USER;
+    private UserRole role = UserRole.USER;
 
     @CreationTimestamp
     @Column(name = "created_at")
-    public LocalDateTime createdAt;
+    private LocalDateTime createdAt;
 
     @UpdateTimestamp
     @Column(name = "updated_at")
-    public LocalDateTime updatedAt;
+    private LocalDateTime updatedAt;
 
     public User() {
     }
 
-    public User(String username, String email, String password, UserRole role, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public User(Long id, String username, String email, String password, UserRole role, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
@@ -97,6 +97,14 @@ public class User extends PanacheEntity {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     @Override
