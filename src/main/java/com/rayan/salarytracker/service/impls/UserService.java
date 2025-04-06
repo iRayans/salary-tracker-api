@@ -34,7 +34,8 @@ public class UserService implements IUserService {
 
     @Override
     public UserReadOnlyDTO findUserByEmail(String email) {
-        return null;
+        User user = userRepository.findUserByEmail(email);
+        return mapper.mapToUserReadOnlyDTO(user);
     }
 
     @Override

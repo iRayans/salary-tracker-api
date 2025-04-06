@@ -1,8 +1,11 @@
 package com.rayan.salarytracker.resource;
 
+import com.rayan.salarytracker.dto.user.AuthenticationResponseDTO;
 import com.rayan.salarytracker.dto.user.UserInsertDTO;
 import com.rayan.salarytracker.dto.user.UserLoginDTO;
 import com.rayan.salarytracker.dto.user.UserReadOnlyDTO;
+import com.rayan.salarytracker.model.User;
+import com.rayan.salarytracker.security.JwtService;
 import com.rayan.salarytracker.service.IUserService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -35,11 +38,16 @@ public class UserResource {
 
     @POST
     @Path("/login")
-    public Response loginUser(@Valid UserLoginDTO userLoginDTO) {
-        if (!userService.isUserValid(userLoginDTO.getEmail(), userLoginDTO.getPassword())) {
+    public Response loginUser(@Valid UserLoginDTO request) {
+        if (!userService.isUserValid(request.getEmail(), request.getPassword())) {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
-        UserReadOnlyDTO readOnlyDTO = userService.findUserByEmail(userLoginDTO.getEmail());
-        return Response.status(Response.Status.OK).entity(readOnlyDTO).build();
+        UserReadOnlyDTO user = userService.findUserByEmail(request.getEmail());
+        // Generate token
+        String token = JwtService.generateToken(user);
+
+        UserReadOnlyDTO readOnlyDTO = userService.findUserByEmail(request.getEmail());
+        AuthenticationResponseDTO authenticationResponseDTO = new AuthenticationResponseDTO(token, readOnlyDTO);
+        return Response.status(Response.Status.OK).entity(authenticationResponseDTO).build();
     }
 }

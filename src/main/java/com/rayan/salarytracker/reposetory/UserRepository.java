@@ -9,7 +9,8 @@ import jakarta.enterprise.context.ApplicationScoped;
 public class UserRepository implements PanacheRepository<User>  {
 
     public User findUserByEmail(String email) {
-        return null;
+        User user =  find("email = ?1", email).firstResult();
+        return user;
     }
 
     public Boolean isEmailExists(String email) {
@@ -17,7 +18,7 @@ public class UserRepository implements PanacheRepository<User>  {
     }
 
     public Boolean isUserValid(String email, String plainPassword) {
-        User user =  find("email = ?1", email).firstResult();
+        User user =  findUserByEmail(email);
         return PasswordUtil.checkPassword(plainPassword, user.getPassword());
     }
 }
