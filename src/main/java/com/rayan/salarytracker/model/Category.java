@@ -1,9 +1,10 @@
 package com.rayan.salarytracker.model;
 
+
+import com.rayan.salarytracker.core.enumuartion.CategoryType;
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.NotBlank;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -11,52 +12,58 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "base_salaries")
-public class BaseSalary {
+@Table(name = "categories")
+public class Category{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull(message = "Amount is required")
-    @Positive(message = "Amount must be positive")
-    public BigDecimal amount;
+    @NotBlank(message = "Name is required")
+    private String name;
 
-    public String description;
+    private String description;
+
+    // Budget limit for this category
+    @Column(name = "monthly_budget")
+    private BigDecimal monthlyBudget;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    public User user;
-
-    public boolean isActive = true;
+    private User user;
 
     @CreationTimestamp
     @Column(name = "created_at")
-    public LocalDateTime createdAt;
+    private LocalDateTime createdAt;
 
     @UpdateTimestamp
     @Column(name = "updated_at")
-    public LocalDateTime updatedAt;
+    private LocalDateTime updatedAt;
 
-    public BaseSalary() {
+    @Enumerated(EnumType.STRING)
+    private CategoryType type = CategoryType.EXPENSE;
+
+
+    public Category() {
     }
 
-    public BaseSalary(Long id, BigDecimal amount, String description, User user, boolean isActive, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Category(Long id, String name, String description, BigDecimal monthlyBudget, User user, LocalDateTime createdAt, LocalDateTime updatedAt, CategoryType type) {
         this.id = id;
-        this.amount = amount;
+        this.name = name;
         this.description = description;
+        this.monthlyBudget = monthlyBudget;
         this.user = user;
-        this.isActive = isActive;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.type = type;
     }
 
-    public BigDecimal getAmount() {
-        return amount;
+    public String getName() {
+        return name;
     }
 
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {
@@ -67,20 +74,20 @@ public class BaseSalary {
         this.description = description;
     }
 
+    public BigDecimal getMonthlyBudget() {
+        return monthlyBudget;
+    }
+
+    public void setMonthlyBudget(BigDecimal monthlyBudget) {
+        this.monthlyBudget = monthlyBudget;
+    }
+
     public User getUser() {
         return user;
     }
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public boolean isActive() {
-        return isActive;
-    }
-
-    public void setActive(boolean active) {
-        isActive = active;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -99,15 +106,24 @@ public class BaseSalary {
         this.updatedAt = updatedAt;
     }
 
+    public CategoryType getType() {
+        return type;
+    }
+
+    public void setType(CategoryType type) {
+        this.type = type;
+    }
+
     @Override
     public String toString() {
-        return "BaseSalary{" +
-                "amount=" + amount +
+        return "Category{" +
+                "name='" + name + '\'' +
                 ", description='" + description + '\'' +
+                ", monthlyBudget=" + monthlyBudget +
                 ", user=" + user +
-                ", isActive=" + isActive +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
+                ", type=" + type +
                 '}';
     }
 }
