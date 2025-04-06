@@ -1,7 +1,6 @@
 package com.rayan.salarytracker.model;
 
 import com.rayan.salarytracker.core.enumuartion.AdjustmentType;
-import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.CreationTimestamp;
@@ -14,39 +13,42 @@ import java.time.YearMonth;
 
 @Entity
 @Table(name = "salary_adjustments")
-public class SalaryAdjustment extends PanacheEntity {
+public class SalaryAdjustment {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     @NotNull(message = "Amount is required")
-    public BigDecimal amount; // Can be positive (bonus) or negative (deduction)
+    private BigDecimal amount; // Can be positive (bonus) or negative (deduction)
 
     @NotNull(message = "Date is required")
-    public LocalDate date;
+    private LocalDate date;
 
-    @Column(name = "year_month")
-    public YearMonth yearMonth;
+    @Column(name = "year_month_val")
+    private YearMonth yearMonth;
 
-    public String description;
+    private String description;
 
     @Enumerated(EnumType.STRING)
-    public AdjustmentType type = AdjustmentType.BONUS;
+    private AdjustmentType type = AdjustmentType.BONUS;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    public User user;
+    private User user;
 
     @CreationTimestamp
     @Column(name = "created_at")
-    public LocalDateTime createdAt;
+    private LocalDateTime createdAt;
 
     @UpdateTimestamp
     @Column(name = "updated_at")
-    public LocalDateTime updatedAt;
+    private LocalDateTime updatedAt;
 
 
     // Lifecycle methods
     @PrePersist
     @PreUpdate
-    void calculateYearMonth() {
+    private void calculateYearMonth() {
         if (date != null) {
             this.yearMonth = YearMonth.from(date);
         }
@@ -55,7 +57,8 @@ public class SalaryAdjustment extends PanacheEntity {
     public SalaryAdjustment() {
     }
 
-    public SalaryAdjustment(BigDecimal amount, LocalDate date, YearMonth yearMonth, String description, AdjustmentType type, User user, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public SalaryAdjustment(Long id, BigDecimal amount, LocalDate date, YearMonth yearMonth, String description, AdjustmentType type, User user, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.id = id;
         this.amount = amount;
         this.date = date;
         this.yearMonth = yearMonth;
@@ -138,7 +141,6 @@ public class SalaryAdjustment extends PanacheEntity {
                 ", yearMonth=" + yearMonth +
                 ", description='" + description + '\'' +
                 ", type=" + type +
-                ", user=" + user +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
                 '}';
