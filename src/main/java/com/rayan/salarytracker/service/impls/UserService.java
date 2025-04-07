@@ -9,12 +9,15 @@ import com.rayan.salarytracker.service.IUserService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import org.jboss.logging.Logger;
 
 import java.util.List;
 
 @ApplicationScoped
 @Transactional
 public class UserService implements IUserService {
+
+    private static final Logger LOGGER = Logger.getLogger(UserService.class);
 
     @Inject
     UserRepository userRepository;
@@ -23,7 +26,7 @@ public class UserService implements IUserService {
 
     @Override
     public UserReadOnlyDTO createUser(UserInsertDTO userInsertDTO) {
-
+        LOGGER.info("Creating user: " + userInsertDTO);
         if (userInsertDTO.getRole() == null) {
             userInsertDTO.setRole("USER");
         }
@@ -34,6 +37,7 @@ public class UserService implements IUserService {
 
     @Override
     public UserReadOnlyDTO findUserByEmail(String email) {
+        LOGGER.info("Finding user by email: " + email);
         User user = userRepository.findUserByEmail(email);
         return mapper.mapToUserReadOnlyDTO(user);
     }
@@ -50,11 +54,13 @@ public class UserService implements IUserService {
 
     @Override
     public Boolean isEmailExists(String email) {
+        LOGGER.info("Checking if user with email: " + email + " exists");
         return userRepository.isEmailExists(email);
     }
 
     @Override
     public Boolean isUserValid(String email, String password) {
+        LOGGER.info("Checking if user with email: " + email + " exists");
        return userRepository.isUserValid(email, password);
     }
 }

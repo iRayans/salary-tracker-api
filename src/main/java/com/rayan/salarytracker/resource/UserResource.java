@@ -7,6 +7,7 @@ import com.rayan.salarytracker.dto.user.UserReadOnlyDTO;
 import com.rayan.salarytracker.model.User;
 import com.rayan.salarytracker.security.JwtService;
 import com.rayan.salarytracker.service.IUserService;
+import com.rayan.salarytracker.service.impls.UserService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
@@ -16,12 +17,15 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.jboss.logging.Logger;
 
 @ApplicationScoped
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("/api/v1/auth")
 public class UserResource {
+
+    private static final Logger LOGGER = Logger.getLogger(UserResource.class);
 
     @Inject
     IUserService userService;
