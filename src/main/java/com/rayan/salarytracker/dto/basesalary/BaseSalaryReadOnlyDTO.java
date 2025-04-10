@@ -1,5 +1,7 @@
 package com.rayan.salarytracker.dto.basesalary;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.math.BigDecimal;
 
 public class BaseSalaryReadOnlyDTO {
@@ -43,11 +45,22 @@ public class BaseSalaryReadOnlyDTO {
         this.description = description;
     }
 
+    @JsonProperty("isActive")
     public boolean isActive() {
         return isActive;
     }
 
     public void setActive(boolean active) {
         isActive = active;
+    }
+
+    @Override
+    public String toString() {
+        return "BaseSalaryReadOnlyDTO{" +
+                "id=" + id +
+                ", amount=" + amount +
+                ", description='" + description + '\'' +
+                ", isActive=" + isActive +
+                '}';
     }
 }
