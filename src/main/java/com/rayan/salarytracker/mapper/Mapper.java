@@ -62,7 +62,7 @@ public class Mapper {
                 baseSalary.getId(),
                 baseSalary.getAmount(),
                 baseSalary.getDescription(),
-                baseSalary.isActive()
+                baseSalary.getActive()
         );
     }
 }
