@@ -10,15 +10,11 @@ import java.util.List;
 @ApplicationScoped
 public class BaseSalaryRepository implements PanacheRepository<BaseSalary> {
 
-    public BaseSalary findByUser(User user) {
-        return find("user", user).firstResult();
-    }
-
-    public BaseSalary findByUserId(Long userId) {
-        return find("user.id", userId).firstResult();
-    }
-
     public List<BaseSalary> getAllSalaries(Long userId) {
         return find("user.id", userId).list();
+    }
+
+    public BaseSalary findByIdAndUserId(Long salaryId, Long userId) {
+        return find("id = ?1 and user.id = ?2", salaryId, userId).firstResult();
     }
 }

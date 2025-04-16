@@ -2,15 +2,16 @@ package com.rayan.salarytracker.resource;
 
 import com.rayan.salarytracker.dto.basesalary.BaseSalaryInsertDTO;
 import com.rayan.salarytracker.dto.basesalary.BaseSalaryReadOnlyDTO;
+import com.rayan.salarytracker.dto.basesalary.BaseSalaryUpdateDTO;
 import com.rayan.salarytracker.service.IBaseSalaryService;
 import io.quarkus.security.Authenticated;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
+import jakarta.validation.Valid;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+
+import java.util.List;
 
 @Path("api/v1/salaries")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -22,10 +23,29 @@ public class BaseSalaryResource {
 
 
     @POST
-    public Response createBaseSalary(BaseSalaryInsertDTO baseSalaryInsertDTO) {
+    public Response createBaseSalary(@Valid BaseSalaryInsertDTO baseSalaryInsertDTO) {
         BaseSalaryReadOnlyDTO baseSalaryReadOnlyDTO = baseSalaryService.save(baseSalaryInsertDTO);
-        System.out.println("Created BaseSalary: " + baseSalaryReadOnlyDTO);
         return Response.status(Response.Status.CREATED).entity(baseSalaryReadOnlyDTO).build();
+    }
+
+    @GET
+    public Response getBaseSalaries() {
+        List<BaseSalaryReadOnlyDTO> baseSalaries = baseSalaryService.getSalaries();
+        return Response.status(Response.Status.OK).entity(baseSalaries).build();
+    }
+
+    @GET
+    @Path("/{salaryId}")
+    public Response getBaseSalaryById(@PathParam("salaryId") Long id) {
+        BaseSalaryReadOnlyDTO baseSalaryReadOnlyDTO = baseSalaryService.getById(id);
+        return Response.status(Response.Status.OK).entity(baseSalaryReadOnlyDTO).build();
+    }
+
+    @PUT
+    @Path("/{salaryId}")
+    public Response updateBaseSalary(@PathParam("salaryId") Long salaryId, BaseSalaryUpdateDTO baseSalaryUpdateDTO) {
+        BaseSalaryReadOnlyDTO baseSalaryReadOnlyDTO = baseSalaryService.updateSalary(salaryId, baseSalaryUpdateDTO);
+        return Response.status(Response.Status.OK).entity(baseSalaryReadOnlyDTO).build();
     }
 }
 

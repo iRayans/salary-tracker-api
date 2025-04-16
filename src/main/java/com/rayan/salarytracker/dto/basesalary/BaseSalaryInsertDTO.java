@@ -1,9 +1,15 @@
 package com.rayan.salarytracker.dto.basesalary;
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+
 import java.math.BigDecimal;
 
 public class BaseSalaryInsertDTO {
+    @NotNull(message = "Amount is required")
+    @Positive(message = "Amount must be greater than zero")
     public BigDecimal amount;
+    @NotNull(message = "Description is required")
     public String description;
     public boolean isActive;
 

@@ -28,7 +28,7 @@ public class BaseSalary {
     @JoinColumn(name = "user_id")
     public User user;
 
-    public boolean isActive = true;
+    public Boolean isActive = true;
 
     @CreationTimestamp
     @Column(name = "created_at")
@@ -41,7 +41,7 @@ public class BaseSalary {
     public BaseSalary() {
     }
 
-    public BaseSalary(Long id, BigDecimal amount, String description, User user, boolean isActive, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public BaseSalary(Long id, BigDecimal amount, String description, User user, Boolean isActive, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.amount = amount;
         this.description = description;
@@ -75,11 +75,11 @@ public class BaseSalary {
         this.user = user;
     }
 
-    public boolean isActive() {
+    public Boolean getActive() {
         return isActive;
     }
 
-    public void setActive(boolean active) {
+    public void setActive(Boolean active) {
         isActive = active;
     }
 
