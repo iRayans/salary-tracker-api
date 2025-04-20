@@ -11,5 +11,6 @@ public interface IBaseSalaryService {
     List<BaseSalaryReadOnlyDTO> getSalaries();
     BaseSalaryReadOnlyDTO getById(Long salaryId);
     BaseSalaryReadOnlyDTO updateSalary(Long salaryId, BaseSalaryUpdateDTO updateDTO);
+    void deleteSalary(Long salaryId);
 
 }

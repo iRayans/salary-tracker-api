@@ -47,5 +47,12 @@ public class BaseSalaryResource {
         BaseSalaryReadOnlyDTO baseSalaryReadOnlyDTO = baseSalaryService.updateSalary(salaryId, baseSalaryUpdateDTO);
         return Response.status(Response.Status.OK).entity(baseSalaryReadOnlyDTO).build();
     }
+
+    @DELETE
+    @Path("/{salaryId}")
+    public Response deleteBaseSalary(@PathParam("salaryId") Long salaryId) {
+        baseSalaryService.deleteSalary(salaryId);
+        return Response.status(Response.Status.NO_CONTENT).build();
+    }
 }
 

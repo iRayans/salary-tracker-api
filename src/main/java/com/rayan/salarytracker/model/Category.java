@@ -1,14 +1,12 @@
 package com.rayan.salarytracker.model;
 
-
-import com.rayan.salarytracker.core.enumuartion.CategoryType;
-import io.quarkus.hibernate.orm.panache.PanacheEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -19,15 +17,20 @@ public class Category{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Name is required")
+    @NotNull(message = "Name is required")
+    @NotBlank
     private String name;
 
+    @NotNull(message = "Description is required")
+    @NotBlank
     private String description;
 
     // Budget limit for this category
-    @Column(name = "monthly_budget")
-    private BigDecimal monthlyBudget;
+    // Not needed in this release :)
+//    @Column(name = "monthly_budget")
+//    private BigDecimal monthlyBudget;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
@@ -40,22 +43,19 @@ public class Category{
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @Enumerated(EnumType.STRING)
-    private CategoryType type = CategoryType.EXPENSE;
+
 
 
     public Category() {
     }
 
-    public Category(Long id, String name, String description, BigDecimal monthlyBudget, User user, LocalDateTime createdAt, LocalDateTime updatedAt, CategoryType type) {
+    public Category(Long id, String name, String description, User user, LocalDateTime createdAt, LocalDateTime updatedAt ) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.monthlyBudget = monthlyBudget;
         this.user = user;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
-        this.type = type;
     }
 
     public String getName() {
@@ -72,14 +72,6 @@ public class Category{
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public BigDecimal getMonthlyBudget() {
-        return monthlyBudget;
-    }
-
-    public void setMonthlyBudget(BigDecimal monthlyBudget) {
-        this.monthlyBudget = monthlyBudget;
     }
 
     public User getUser() {
@@ -106,24 +98,22 @@ public class Category{
         this.updatedAt = updatedAt;
     }
 
-    public CategoryType getType() {
-        return type;
+    public Long getId() {
+        return id;
     }
 
-    public void setType(CategoryType type) {
-        this.type = type;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     @Override
     public String toString() {
         return "Category{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", monthlyBudget=" + monthlyBudget +
-                ", user=" + user +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
-                ", type=" + type +
                 '}';
     }
 }

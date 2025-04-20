@@ -1,6 +1,7 @@
 package com.rayan.salarytracker.service.impls;
 
 import com.rayan.salarytracker.core.exception.EntityInvalidArgumentsException;
+import com.rayan.salarytracker.core.exception.EntityNotFoundException;
 import com.rayan.salarytracker.dto.basesalary.BaseSalaryInsertDTO;
 import com.rayan.salarytracker.dto.basesalary.BaseSalaryReadOnlyDTO;
 import com.rayan.salarytracker.dto.basesalary.BaseSalaryUpdateDTO;
@@ -13,7 +14,6 @@ import com.rayan.salarytracker.service.IBaseSalaryService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import jakarta.ws.rs.NotFoundException;
 import org.jboss.logging.Logger;
 
 import java.util.List;
@@ -35,18 +35,15 @@ public class BaseSalaryService implements IBaseSalaryService {
 
     @Override
     public BaseSalaryReadOnlyDTO save(BaseSalaryInsertDTO baseSalaryInsertDTO) {
-
-        // Get current user
+        LOGGER.info("Saving baseSalary: " + baseSalaryInsertDTO);
         User currentUser = loggedInUser.getUser()
                 .orElseThrow(() -> new EntityInvalidArgumentsException("Cannot create salary: User not found"));
 
-        // Map and save the salary
         BaseSalary baseSalary = mapper.mapToBaseSalary(baseSalaryInsertDTO);
         baseSalary.setUser(currentUser);
 
-        // No try-catch needed here, let any exceptions propagate up
         baseSalaryRepository.persist(baseSalary);
-
+        LOGGER.info("BaseSalary Saved.");
         return mapper.mapToBaseSalaryReadOnlyDTO(baseSalary);
     }
 
@@ -66,7 +63,7 @@ public class BaseSalaryService implements IBaseSalaryService {
     public BaseSalaryReadOnlyDTO getById(Long salaryId) {
         BaseSalary baseSalary = baseSalaryRepository.findByIdAndUserId(salaryId, loggedInUser.getUserId());
         if (baseSalary == null) {
-            throw new NotFoundException("Salary record not found or you don't have permission to access it");
+            throw new EntityNotFoundException("Salary record not found.");
         }
         return mapper.mapToBaseSalaryReadOnlyDTO(baseSalary);
     }
@@ -78,7 +75,7 @@ public class BaseSalaryService implements IBaseSalaryService {
         BaseSalary existingSalary = baseSalaryRepository.findByIdAndUserId(salaryId, currentUser.getId());
 
         if (existingSalary == null) {
-            throw new NotFoundException("Salary record not found with the given ID for your account");
+            throw new EntityNotFoundException("Salary record not found with the given ID for your account");
         }
 
         // update fields
@@ -87,6 +84,18 @@ public class BaseSalaryService implements IBaseSalaryService {
         LOGGER.info("User " + currentUser.getUsername() + " updated salary record " + salaryId);
 
         return mapper.mapToBaseSalaryReadOnlyDTO(existingSalary);
+    }
+
+    @Override
+    public void deleteSalary(Long salaryId) {
+        LOGGER.info("deleting salary record " + salaryId);
+        User currentUser = loggedInUser.getUser()
+                .orElseThrow(() -> new EntityInvalidArgumentsException("Cannot create salary: User not found"));
+        BaseSalary baseSalary = baseSalaryRepository.findByIdAndUserId(salaryId, currentUser.getId());
+        if (baseSalary == null) {
+            throw new EntityNotFoundException("Salary record not found with the given ID for your account");
+        }
+        baseSalaryRepository.delete(baseSalary);
     }
 
 
