@@ -1,54 +1,28 @@
-package com.rayan.salarytracker.model;
+package com.rayan.salarytracker.dto.recurringExpense;
 
+import com.rayan.salarytracker.dto.category.CategoryReadOnlyDTO;
+import com.rayan.salarytracker.model.Category;
 
-import jakarta.persistence.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "recurring_expenses")
-public class RecurringExpense {
+public class RecurringExpenseReadOnlyDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String description;
     private BigDecimal amount;
-
-    @Column(name = "due_day_of_month",nullable = true)
     private Integer dueDayOfMonth;
-
-//    @NotNull(message = "Start date is required")
-//    @Column(name = "start_date")
-//    private LocalDate startDate;
-
-    @Column(name = "is_active")
     private Boolean isActive = true;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "category_id")
-    private Category category;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    @CreationTimestamp
-    @Column(name = "created_at")
+    private CategoryReadOnlyDTO category;
     private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    public RecurringExpense() {
+    public RecurringExpenseReadOnlyDTO() {
     }
 
-    public RecurringExpense(Long id, String name, String description, BigDecimal amount, Integer dueDayOfMonth , boolean isActive, Category category, User user, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public RecurringExpenseReadOnlyDTO(Long id, String name, String description, BigDecimal amount, Integer dueDayOfMonth, Boolean isActive, CategoryReadOnlyDTO category, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -56,7 +30,6 @@ public class RecurringExpense {
         this.dueDayOfMonth = dueDayOfMonth;
         this.isActive = isActive;
         this.category = category;
-        this.user = user;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -101,28 +74,20 @@ public class RecurringExpense {
         this.dueDayOfMonth = dueDayOfMonth;
     }
 
-    public boolean isActive() {
+    public Boolean getActive() {
         return isActive;
     }
 
-    public void setActive(boolean active) {
+    public void setActive(Boolean active) {
         isActive = active;
     }
 
-    public Category getCategory() {
+    public CategoryReadOnlyDTO getCategory() {
         return category;
     }
 
-    public void setCategory(Category category) {
+    public void setCategory(CategoryReadOnlyDTO category) {
         this.category = category;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -143,13 +108,14 @@ public class RecurringExpense {
 
     @Override
     public String toString() {
-        return "RecurringExpense{" +
+        return "RecurringExpenseReadOnlyDTO{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", amount=" + amount +
                 ", dueDayOfMonth=" + dueDayOfMonth +
                 ", isActive=" + isActive +
+                ", category=" + category +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
                 '}';
