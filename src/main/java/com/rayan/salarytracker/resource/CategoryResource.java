@@ -1,8 +1,9 @@
 package com.rayan.salarytracker.resource;
 
+import com.rayan.salarytracker.dto.category.CategoryInsertDTO;
+import com.rayan.salarytracker.dto.category.CategoryReadOnlyDTO;
 import com.rayan.salarytracker.model.Category;
 import com.rayan.salarytracker.service.ICategoryService;
-import com.rayan.salarytracker.service.impls.CategoryService;
 import io.quarkus.security.Authenticated;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
@@ -22,28 +23,28 @@ public class CategoryResource {
     ICategoryService categoryService;
 
     @POST
-    public Response createCategory(@Valid Category category) {
-        Category cat = categoryService.save(category);
-        return Response.status(Response.Status.CREATED).entity(cat).build();
+    public Response createCategory(@Valid CategoryInsertDTO categoryInsertDTO) {
+        CategoryReadOnlyDTO categoryReadOnlyDTO = categoryService.save(categoryInsertDTO);
+        return Response.status(Response.Status.CREATED).entity(categoryReadOnlyDTO).build();
     }
 
     @GET
     public Response getAllCategories() {
-        List<Category> categories = categoryService.findAll();
+        List<CategoryReadOnlyDTO> categories = categoryService.findAll();
         return Response.status(Response.Status.OK).entity(categories).build();
     }
 
     @GET
     @Path("/{id}")
     public Response getCategoryById(@PathParam("id") Long id) {
-        Category category = categoryService.findById(id);
+        CategoryReadOnlyDTO category = categoryService.findById(id);
         return Response.status(Response.Status.OK).entity(category).build();
     }
 
     @PUT
     @Path("/{id}")
     public Response updateCategory(@PathParam("id") Long id, @Valid Category categoryUpdate) {
-        Category category = categoryService.update(id, categoryUpdate);
+        CategoryReadOnlyDTO category = categoryService.update(id, categoryUpdate);
         return Response.status(Response.Status.OK).entity(category).build();
     }
 
