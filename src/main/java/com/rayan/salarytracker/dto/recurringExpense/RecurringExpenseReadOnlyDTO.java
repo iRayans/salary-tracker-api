@@ -1,5 +1,6 @@
 package com.rayan.salarytracker.dto.recurringExpense;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.rayan.salarytracker.dto.category.CategoryReadOnlyDTO;
 import com.rayan.salarytracker.model.Category;
 
@@ -73,7 +74,7 @@ public class RecurringExpenseReadOnlyDTO {
     public void setDueDayOfMonth(Integer dueDayOfMonth) {
         this.dueDayOfMonth = dueDayOfMonth;
     }
-
+    @JsonProperty("isActive")
     public Boolean getActive() {
         return isActive;
     }
