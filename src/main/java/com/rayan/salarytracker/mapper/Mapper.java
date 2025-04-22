@@ -5,14 +5,13 @@ import com.rayan.salarytracker.dto.basesalary.BaseSalaryInsertDTO;
 import com.rayan.salarytracker.dto.basesalary.BaseSalaryReadOnlyDTO;
 import com.rayan.salarytracker.dto.category.CategoryInsertDTO;
 import com.rayan.salarytracker.dto.category.CategoryReadOnlyDTO;
+import com.rayan.salarytracker.dto.expense.ExpenseInsertDTO;
+import com.rayan.salarytracker.dto.expense.ExpenseReadOnlyDTO;
 import com.rayan.salarytracker.dto.recurringExpense.RecurringExpenseInsertDTO;
 import com.rayan.salarytracker.dto.recurringExpense.RecurringExpenseReadOnlyDTO;
 import com.rayan.salarytracker.dto.user.UserInsertDTO;
 import com.rayan.salarytracker.dto.user.UserReadOnlyDTO;
-import com.rayan.salarytracker.model.BaseSalary;
-import com.rayan.salarytracker.model.Category;
-import com.rayan.salarytracker.model.RecurringExpense;
-import com.rayan.salarytracker.model.User;
+import com.rayan.salarytracker.model.*;
 import com.rayan.salarytracker.security.PasswordUtil;
 import jakarta.enterprise.context.ApplicationScoped;
 
@@ -130,6 +129,53 @@ public class Mapper {
                 categoryDTO,
                 recurringExpense.getCreatedAt(),
                 recurringExpense.getUpdatedAt()
+        );
+    }
+
+    // =========================================
+    // =          Expense Mapper               =
+    // =========================================
+
+    public Expense mapToExpense(ExpenseInsertDTO expenseInsertDTO) {
+        return new Expense(
+                null,
+                expenseInsertDTO.getName(),
+                expenseInsertDTO.getAmount(),
+                expenseInsertDTO.getDescription(),
+                expenseInsertDTO.getPaid(),
+                expenseInsertDTO.getYearMonth(),
+                null,
+                null,
+                null,
+                expenseInsertDTO.getBank(),
+                null,
+                null
+        );
+    }
+
+    public ExpenseReadOnlyDTO mapToExpenseReadOnlyDTO(Expense expense) {
+        CategoryReadOnlyDTO categoryDTO = new CategoryReadOnlyDTO(
+                expense.getCategory().getId(),
+                expense.getCategory().getName(),
+                expense.getCategory().getDescription()
+        );
+
+        // Handle the case when recurringSource is null
+        Long recurringId = null;
+        if (expense.getRecurringSource() != null) {
+            recurringId = expense.getRecurringSource().getId();
+        }
+
+        return new ExpenseReadOnlyDTO(
+                expense.getId(),
+                expense.getName(),
+                expense.getDescription(),
+                expense.getAmount(),
+                expense.getYearMonth(),
+                expense.isPaid(),
+                expense.getBank(),
+                categoryDTO,
+                recurringId
         );
     }
 }

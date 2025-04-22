@@ -163,6 +163,14 @@ public class Expense {
         this.updatedAt = updatedAt;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     @Override
     public String toString() {
         return "Expense{" +
