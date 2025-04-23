@@ -47,7 +47,7 @@ public class Expense {
     @JoinColumn(name = "recurring_expense_id")
     private RecurringExpense recurringSource; // Null for one-off expenses
 
-    private String bank;
+    private String bank = "AlJazeera";
 
     @CreationTimestamp
     @Column(name = "created_at")

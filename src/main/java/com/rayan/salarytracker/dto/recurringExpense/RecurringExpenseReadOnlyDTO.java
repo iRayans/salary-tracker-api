@@ -15,7 +15,7 @@ public class RecurringExpenseReadOnlyDTO {
     private String description;
     private BigDecimal amount;
     private Integer dueDayOfMonth;
-    private Boolean isActive = true;
+    private Boolean isActive;
     private CategoryReadOnlyDTO category;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

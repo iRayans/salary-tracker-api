@@ -19,20 +19,18 @@ public class RecurringExpenseInsertDTO {
     @Max(value = 31, message = "Day of month must be at most 31")
     private Integer dueDayOfMonth;
     private Boolean isActive = true;
-    private User user;
     private Long categoryId;
 
     public RecurringExpenseInsertDTO() {
     }
 
-    public RecurringExpenseInsertDTO(Long id, String name, String description, BigDecimal amount, Integer dueDayOfMonth, Boolean isActive, User user, Long categoryId) {
+    public RecurringExpenseInsertDTO(Long id, String name, String description, BigDecimal amount, Integer dueDayOfMonth, Boolean isActive, Long categoryId) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.amount = amount;
         this.dueDayOfMonth = dueDayOfMonth;
         this.isActive = isActive;
-        this.user = user;
         this.categoryId = categoryId;
     }
 
@@ -82,14 +80,6 @@ public class RecurringExpenseInsertDTO {
 
     public void setActive(Boolean active) {
         isActive = active;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public Long getCategoryId() {

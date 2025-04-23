@@ -1,5 +1,6 @@
 package com.rayan.salarytracker.resource;
 
+import com.rayan.salarytracker.dto.YearMonthDTO;
 import com.rayan.salarytracker.model.Expense;
 import com.rayan.salarytracker.service.impls.ExpenseGenerationService;
 import io.quarkus.security.Authenticated;
@@ -32,21 +33,9 @@ public class ExpenseGenerationResource {
         return Response.status(Response.Status.CREATED)
                 .entity(Map.of(
                         "message", "Generated " + generatedExpenses.size() + " expenses",
-                        "count", generatedExpenses.size()
+                        "expenses", generatedExpenses.size()
                 ))
                 .build();
     }
 
-    public static class YearMonthDTO {
-        private String yearMonth;
-
-        // Getters and setters
-        public String getYearMonth() {
-            return yearMonth;
-        }
-
-        public void setYearMonth(String yearMonth) {
-            this.yearMonth = yearMonth;
-        }
-    }
 }
