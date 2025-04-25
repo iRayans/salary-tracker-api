@@ -17,4 +17,8 @@ public class BaseSalaryRepository implements PanacheRepository<BaseSalary> {
     public BaseSalary findByIdAndUserId(Long salaryId, Long userId) {
         return find("id = ?1 and user.id = ?2", salaryId, userId).firstResult();
     }
+
+    public BaseSalary findUserActiveSalary(Long userId) {
+        return find("user.id = ?1 and isActive = true", userId).firstResult();
+    }
 }

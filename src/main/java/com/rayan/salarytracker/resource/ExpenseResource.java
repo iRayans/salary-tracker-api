@@ -10,6 +10,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import java.time.YearMonth;
 import java.util.List;
 
 @Path("api/v1/expenses")
@@ -34,6 +35,13 @@ public class ExpenseResource {
         return Response.status(Response.Status.OK).entity(expenseReadOnlyDTOList).build();
     }
 
+    @GET
+    @Path("/{yearMonth}")
+    public Response getExpenseByMonth(@PathParam("yearMonth") String yearMonthStr) {
+        YearMonth yearMonth = YearMonth.parse(yearMonthStr);
+        List<ExpenseReadOnlyDTO> expenses = expenseService.findExpenseByMonth(yearMonth);
+        return Response.status(Response.Status.OK).entity(expenses).build();
+    }
     @GET
     @Path("/{expenseId}")
     public Response getExpenseById(@PathParam("expenseId") Long expenseId) {

@@ -19,7 +19,9 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 
+import java.time.YearMonth;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
@@ -104,6 +106,12 @@ public class ExpenseService implements IExpenseService {
         throw new EntityInvalidArgumentsException("Expense not found");
     }
     expenseRepository.delete(expense);
+    }
+
+    public List<ExpenseReadOnlyDTO> findExpenseByMonth(YearMonth yearMonth) {
+        Long userId = loggedInUser.getUserId();
+        List<Expense> expense = expenseRepository.findExpenseByMonth(yearMonth,userId);
+        return expense.stream().map(mapper::mapToExpenseReadOnlyDTO).collect(Collectors.toList());
     }
 
     private void fillFields(Expense existExpense, ExpenseUpdateDTO expenseUpdateDTO) {

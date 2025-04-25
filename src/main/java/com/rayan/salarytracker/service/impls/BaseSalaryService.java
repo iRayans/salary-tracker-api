@@ -5,6 +5,7 @@ import com.rayan.salarytracker.core.exception.EntityNotFoundException;
 import com.rayan.salarytracker.dto.basesalary.BaseSalaryInsertDTO;
 import com.rayan.salarytracker.dto.basesalary.BaseSalaryReadOnlyDTO;
 import com.rayan.salarytracker.dto.basesalary.BaseSalaryUpdateDTO;
+import com.rayan.salarytracker.dto.recurringExpense.RecurringExpenseReadOnlyDTO;
 import com.rayan.salarytracker.mapper.Mapper;
 import com.rayan.salarytracker.model.BaseSalary;
 import com.rayan.salarytracker.model.User;
@@ -98,6 +99,14 @@ public class BaseSalaryService implements IBaseSalaryService {
         baseSalaryRepository.delete(baseSalary);
     }
 
+    public BaseSalaryReadOnlyDTO getActiveSalary() {
+        Long userId = loggedInUser.getUserId();
+        BaseSalary baseSalary = baseSalaryRepository.findUserActiveSalary(userId);
+        if (baseSalary == null) {
+            throw new EntityNotFoundException("Salary record not found with the given ID for your account");
+        }
+        return mapper.mapToBaseSalaryReadOnlyDTO(baseSalary);
+    }
 
     private void updateFields(BaseSalary existingSalary, BaseSalaryUpdateDTO updateDTO) {
         existingSalary.setAmount(updateDTO.getAmount() != null ? updateDTO.getAmount() : existingSalary.getAmount());

@@ -31,4 +31,8 @@ public class ExpenseRepository implements PanacheRepository<Expense> {
         return count("recurringSource.id = ?1 and yearMonth = ?2",
                 recurringSource.getId(), yearMonth) > 0;
     }
+
+    public List<Expense> findExpenseByMonth(YearMonth yearMonth, Long userId) {
+        return find("user.id = ?1 and yearMonth = ?2", userId,yearMonth).list();
+    }
 }
