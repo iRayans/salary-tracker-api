@@ -25,11 +25,8 @@ public class SummaryService {
         // Get active salary (consider adding error handling if no active salary exists)
         BigDecimal salary = baseSalaryService.getActiveSalary().getAmount();
 
-        // Calculate total expenses using stream (more concise)
-        BigDecimal totalExpenses = expenses.stream()
-                .map(ExpenseReadOnlyDTO::getAmount)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-
+        // Calculate total expenses
+        BigDecimal totalExpenses = getTotalExpenses(expenses);
         // Calculate remaining amount
         BigDecimal remaining = salary.subtract(totalExpenses);
 
@@ -40,5 +37,11 @@ public class SummaryService {
                 yearMonth.toString(),
                 remaining
         );
+    }
+
+    private BigDecimal getTotalExpenses(List<ExpenseReadOnlyDTO> expenses) {
+        return expenses.stream()
+                .map(ExpenseReadOnlyDTO::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }
