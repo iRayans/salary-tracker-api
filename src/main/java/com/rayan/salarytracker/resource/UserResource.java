@@ -1,20 +1,16 @@
 package com.rayan.salarytracker.resource;
 
+import com.rayan.salarytracker.core.exception.EntityInvalidArgumentsException;
 import com.rayan.salarytracker.dto.user.AuthenticationResponseDTO;
 import com.rayan.salarytracker.dto.user.UserInsertDTO;
 import com.rayan.salarytracker.dto.user.UserLoginDTO;
 import com.rayan.salarytracker.dto.user.UserReadOnlyDTO;
-import com.rayan.salarytracker.model.User;
 import com.rayan.salarytracker.security.JwtService;
 import com.rayan.salarytracker.service.IUserService;
-import com.rayan.salarytracker.service.impls.UserService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.jboss.logging.Logger;
@@ -33,6 +29,14 @@ public class UserResource {
     @POST
     @Path("/register")
     public Response registerUser(@Valid UserInsertDTO userInsertDTO) {
+        boolean isEmailExists = userService.isEmailExists(userInsertDTO.getEmail());
+        boolean isUsernameExists = userService.isUsernameExists(userInsertDTO.getUsername());
+        if (isEmailExists) {
+            throw new EntityInvalidArgumentsException("Email already exists");
+        }
+        if (isUsernameExists) {
+            throw new EntityInvalidArgumentsException("Username already exists");
+        }
         UserReadOnlyDTO userReadOnlyDTO = userService.createUser(userInsertDTO);
 
         return Response.status(Response.Status.CREATED)
@@ -44,8 +48,9 @@ public class UserResource {
     @Path("/login")
     public Response loginUser(@Valid UserLoginDTO request) {
         if (!userService.isUserValid(request.getEmail(), request.getPassword())) {
-            return Response.status(Response.Status.UNAUTHORIZED).build();
+            throw new EntityInvalidArgumentsException("Wrong email or Password!");
         }
+
         UserReadOnlyDTO user = userService.findUserByEmail(request.getEmail());
         // Generate token
         String token = JwtService.generateToken(user);
@@ -53,5 +58,11 @@ public class UserResource {
         UserReadOnlyDTO readOnlyDTO = userService.findUserByEmail(request.getEmail());
         AuthenticationResponseDTO authenticationResponseDTO = new AuthenticationResponseDTO(token, readOnlyDTO);
         return Response.status(Response.Status.OK).entity(authenticationResponseDTO).build();
+    }
+
+    @GET
+    public Response getCurrentUSer() {
+        UserReadOnlyDTO user = userService.loginUser();
+        return Response.status(Response.Status.OK).entity(user).build();
     }
 }

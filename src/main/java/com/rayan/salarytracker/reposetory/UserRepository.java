@@ -10,8 +10,7 @@ public class UserRepository implements PanacheRepository<User>  {
 
 
     public User findUserByEmail(String email) {
-        User user =  find("email = ?1", email).firstResult();
-        return user;
+        return find("email = ?1", email).firstResult();
     }
 
     public Boolean isEmailExists(String email) {
@@ -19,7 +18,14 @@ public class UserRepository implements PanacheRepository<User>  {
     }
 
     public Boolean isUserValid(String email, String plainPassword) {
-        User user =  findUserByEmail(email);
+        User user = findUserByEmail(email);
+        if (user == null) {
+            return false;
+        }
         return PasswordUtil.checkPassword(plainPassword, user.getPassword());
+    }
+
+    public Boolean isUsernameExists(String username) {
+        return count("username = ?1", username) > 0;
     }
 }
