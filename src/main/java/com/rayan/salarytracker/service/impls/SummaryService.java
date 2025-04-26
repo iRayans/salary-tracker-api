@@ -8,6 +8,8 @@ import jakarta.inject.Inject;
 import java.math.BigDecimal;
 import java.time.YearMonth;
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 @ApplicationScoped
 public class SummaryService {

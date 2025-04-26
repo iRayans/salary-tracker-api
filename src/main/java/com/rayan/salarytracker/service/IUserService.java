@@ -13,4 +13,6 @@ public interface IUserService {
     UserReadOnlyDTO getUserById(Long id);
     Boolean isEmailExists(String email);
     Boolean isUserValid(String email, String password);
+    UserReadOnlyDTO loginUser();
+    Boolean isUsernameExists(String username);
 }

@@ -9,6 +9,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import java.time.YearMonth;
+import java.util.function.Function;
 
 @Path("/api/v1/summary")
 @Produces(MediaType.APPLICATION_JSON)
