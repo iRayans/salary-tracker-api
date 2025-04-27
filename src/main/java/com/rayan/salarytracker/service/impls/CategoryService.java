@@ -46,19 +46,19 @@ public class CategoryService implements ICategoryService {
     }
 
     @Override
-    public CategoryReadOnlyDTO findById(Long id) {
+    public CategoryReadOnlyDTO findById(Long categoryId) {
         Long userId = loggedInUser.getUserId();
-        Category category = categoryRepository.findById(id);
+        Category category = categoryRepository.findUserCategory(categoryId, userId)
+                .orElseThrow(() -> new EntityNotFoundException("Category not found"));
         return mapper.mapToCategoryReadOnlyDTO(category);
     }
 
     @Override
     public CategoryReadOnlyDTO update(Long categoryId, Category updatedCategory) {
         Long userId = loggedInUser.getUserId();
-        Category existingCategory = categoryRepository.findUserCategory(categoryId, userId);
-        if (existingCategory == null) {
-            throw new EntityNotFoundException("Category record not found with the given ID for your account");
-        }
+        Category existingCategory = categoryRepository.findUserCategory(categoryId, userId)
+                .orElseThrow(() -> new EntityNotFoundException("Category not found"));
+
         existingCategory.setName(updatedCategory.getName() != null ? updatedCategory.getName() : existingCategory.getName());
         existingCategory.setDescription(updatedCategory.getDescription() != null ? updatedCategory.getDescription() : existingCategory.getDescription());
         return mapper.mapToCategoryReadOnlyDTO(existingCategory);
@@ -67,10 +67,9 @@ public class CategoryService implements ICategoryService {
     @Override
     public void delete(Long categoryId) {
         Long userId = loggedInUser.getUserId();
-        Category category = categoryRepository.findUserCategory(categoryId, userId);
-        if (category == null) {
-            throw new EntityNotFoundException("Category record not found with the given ID for your account");
-        }
+        Category category = categoryRepository.findUserCategory(categoryId, userId)
+                .orElseThrow(() -> new EntityNotFoundException("Category not found"));
+
         categoryRepository.delete(category);
     }
 }

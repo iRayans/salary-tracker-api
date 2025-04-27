@@ -44,10 +44,8 @@ public class ExpenseService implements IExpenseService {
         User currentUser = loggedInUser.getUser()
                 .orElseThrow(() -> new EntityInvalidArgumentsException("Cannot create expense: User not found"));
 
-        Category category = categoryRepository.findUserCategory(expenseInsertDTO.getCategoryId(), currentUser.getId());
-        if (category == null) {
-            throw new EntityInvalidArgumentsException("Category not found");
-        }
+        Category category = categoryRepository.findUserCategory(expenseInsertDTO.getCategoryId(), currentUser.getId())
+                .orElseThrow(() -> new EntityInvalidArgumentsException("Cannot create expense: Category not found"));
 
         Expense expense = mapper.mapToExpense(expenseInsertDTO);
         expense.setCategory(category);
