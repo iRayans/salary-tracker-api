@@ -54,7 +54,8 @@ public class ExpenseService implements IExpenseService {
         Long recurringExpenseId = expenseInsertDTO.getRecurringExpenseId();
         if (recurringExpenseId != null) {
             RecurringExpense recurringExpense = recurringExpenseRepository.findRecurringExpenseById(
-                    recurringExpenseId, currentUser.getId());
+                    recurringExpenseId, currentUser.getId())
+                    .orElseThrow(() -> new EntityInvalidArgumentsException("Cannot create expense: Recurring expense not found"));
 
             if (recurringExpense == null) {
                 throw new EntityInvalidArgumentsException("RecurringExpense not found");
@@ -110,6 +111,10 @@ public class ExpenseService implements IExpenseService {
         Long userId = loggedInUser.getUserId();
         List<Expense> expense = expenseRepository.findExpenseByMonth(yearMonth,userId);
         return expense.stream().map(mapper::mapToExpenseReadOnlyDTO).collect(Collectors.toList());
+    }
+
+    public boolean existsByRecurringSource(Long recurringSourceId, Long userId) {
+        return expenseRepository.existsByRecurringSource(recurringSourceId,userId);
     }
 
     private void fillFields(Expense existExpense, ExpenseUpdateDTO expenseUpdateDTO) {

@@ -6,6 +6,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 
 import java.time.Month;
 import java.util.List;
+import java.util.Optional;
 
 @ApplicationScoped
 public class RecurringExpenseRepository implements PanacheRepository<RecurringExpense> {
@@ -13,8 +14,8 @@ public class RecurringExpenseRepository implements PanacheRepository<RecurringEx
         return find("user.id = ?1", userId).list();
     }
 
-    public RecurringExpense findRecurringExpenseById(Long recurringExpenseId, Long userId) {
-        return find("id =?1 and user.id = ?2", recurringExpenseId, userId).firstResultOptional().orElse(null);
+    public Optional<RecurringExpense> findRecurringExpenseById(Long recurringExpenseId, Long userId) {
+        return find("id =?1 and user.id = ?2", recurringExpenseId, userId).firstResultOptional();
     }
 
     public List<RecurringExpense> findAcActiveByUserId(Long userId) {
