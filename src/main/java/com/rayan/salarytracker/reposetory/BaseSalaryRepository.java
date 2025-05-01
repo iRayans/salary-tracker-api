@@ -6,6 +6,7 @@ import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 
 import java.util.List;
+import java.util.Optional;
 
 @ApplicationScoped
 public class BaseSalaryRepository implements PanacheRepository<BaseSalary> {
@@ -14,11 +15,11 @@ public class BaseSalaryRepository implements PanacheRepository<BaseSalary> {
         return find("user.id", userId).list();
     }
 
-    public BaseSalary findByIdAndUserId(Long salaryId, Long userId) {
-        return find("id = ?1 and user.id = ?2", salaryId, userId).firstResult();
+    public Optional<BaseSalary> findByIdAndUserId(Long salaryId, Long userId) {
+        return find("id = ?1 AND user.id = ?2",salaryId, userId).singleResultOptional();
     }
 
-    public BaseSalary findUserActiveSalary(Long userId) {
-        return find("user.id = ?1 and isActive = true", userId).firstResult();
+    public Optional<BaseSalary> findUserActiveSalary(Long userId) {
+        return find("user.id = ?1 and isActive = true", userId).firstResultOptional();
     }
 }
