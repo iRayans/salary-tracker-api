@@ -17,7 +17,6 @@ import java.util.List;
 
 
 @ApplicationScoped
-@Transactional
 public class UserService implements IUserService {
 
     private static final Logger LOGGER = Logger.getLogger(UserService.class);
@@ -30,6 +29,7 @@ public class UserService implements IUserService {
     LoggedInUser loggedInUser;
     @Override
 
+    @Transactional
     public UserReadOnlyDTO createUser(UserInsertDTO userInsertDTO) {
         LOGGER.info("Creating user: " + userInsertDTO);
         if (userInsertDTO.getRole() == null) {

@@ -21,11 +21,9 @@ import jakarta.transaction.Transactional;
 
 import java.time.YearMonth;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
-@Transactional
 public class ExpenseService implements IExpenseService {
     @Inject
     ExpenseRepository expenseRepository;
@@ -40,6 +38,7 @@ public class ExpenseService implements IExpenseService {
 
 
     @Override
+    @Transactional
     public ExpenseReadOnlyDTO save(ExpenseInsertDTO expenseInsertDTO) {
         User currentUser = loggedInUser.getUser()
                 .orElseThrow(() -> new EntityInvalidArgumentsException("Cannot create expense: User not found"));
@@ -86,6 +85,7 @@ public class ExpenseService implements IExpenseService {
     }
 
     @Override
+    @Transactional
     public ExpenseReadOnlyDTO updateExpense(Long expenseId, ExpenseUpdateDTO expenseUpdateDTO) {
         Long userId = loggedInUser.getUserId();
         Expense existExpense = expenseRepository.findExpenseById(expenseId, userId);
@@ -98,6 +98,7 @@ public class ExpenseService implements IExpenseService {
     }
 
     @Override
+    @Transactional
     public void deleteExpense(Long expenseId) {
     Long userId = loggedInUser.getUserId();
     Expense expense = expenseRepository.findExpenseById(expenseId, userId);

@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
-@Transactional
 public class RecurringExpenseService implements IRecurringExpenseService {
 
     @Inject
@@ -39,6 +38,7 @@ public class RecurringExpenseService implements IRecurringExpenseService {
     ExpenseService expenseService;
 
     @Override
+    @Transactional
     public RecurringExpenseReadOnlyDTO save(RecurringExpenseInsertDTO recurringExpenseInsertDTO) {
         User currentUser = loggedInUser.getUser()
                 .orElseThrow(() -> new EntityInvalidArgumentsException("Cannot create salary: User not found"));
@@ -74,6 +74,7 @@ public class RecurringExpenseService implements IRecurringExpenseService {
     }
 
     @Override
+    @Transactional
     public RecurringExpenseReadOnlyDTO update(Long id, RecurringExpenseUpdateDTO recurringExpenseUpdateDTO) {
         Long userId = loggedInUser.getUserId();
         RecurringExpense existingExpense = recurringExpenseRepository.findRecurringExpenseById(id, userId)
@@ -87,6 +88,7 @@ public class RecurringExpenseService implements IRecurringExpenseService {
     }
 
     @Override
+    @Transactional
     public void deleteById(Long recurringExpenseId) {
         Long userId = loggedInUser.getUserId();
         RecurringExpense recurringExpense = recurringExpenseRepository.findRecurringExpenseById(recurringExpenseId, userId)
