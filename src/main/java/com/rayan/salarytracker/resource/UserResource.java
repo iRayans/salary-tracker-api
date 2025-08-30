@@ -29,7 +29,6 @@ public class UserResource {
     @POST
     @Path("/register")
     public Response registerUser(@Valid UserInsertDTO userInsertDTO) {
-        LOGGER.info("Registering user: " + userInsertDTO);
         boolean isEmailExists = userService.isEmailExists(userInsertDTO.getEmail());
         boolean isUsernameExists = userService.isUsernameExists(userInsertDTO.getUsername());
         if (isEmailExists) {
@@ -48,7 +47,6 @@ public class UserResource {
     @POST
     @Path("/login")
     public Response loginUser(@Valid UserLoginDTO request) {
-        LOGGER.info("Login user: " + request.getEmail());
         if (!userService.isUserValid(request.getEmail(), request.getPassword())) {
             throw new EntityInvalidArgumentsException("Wrong email or Password!");
         }

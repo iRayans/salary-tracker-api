@@ -105,7 +105,7 @@ public class BaseSalaryService implements IBaseSalaryService {
         baseSalaryRepository.delete(baseSalary);
     }
 
-    @Override
+
     public BaseSalaryReadOnlyDTO getActiveSalary() {
         Long userId = loggedInUser.getUserId();
         BaseSalary baseSalary = baseSalaryRepository.findUserActiveSalary(userId)

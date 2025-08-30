@@ -2,7 +2,6 @@ package com.rayan.salarytracker.service.impls;
 
 import com.rayan.salarytracker.dto.MonthlySummaryDTO;
 import com.rayan.salarytracker.dto.expense.ExpenseReadOnlyDTO;
-import com.rayan.salarytracker.service.IExpenseService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -15,7 +14,7 @@ import java.util.List;
 public class SummaryService {
 
     @Inject
-    IExpenseService expenseService;
+    ExpenseService expenseService;
 
     @Inject
     BaseSalaryService baseSalaryService;

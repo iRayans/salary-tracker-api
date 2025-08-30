@@ -10,7 +10,6 @@ import com.rayan.salarytracker.model.Category;
 import com.rayan.salarytracker.model.RecurringExpense;
 import com.rayan.salarytracker.model.User;
 import com.rayan.salarytracker.reposetory.CategoryRepository;
-import com.rayan.salarytracker.reposetory.ExpenseRepository;
 import com.rayan.salarytracker.reposetory.RecurringExpenseRepository;
 import com.rayan.salarytracker.security.LoggedInUser;
 import com.rayan.salarytracker.service.IRecurringExpenseService;
@@ -22,6 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
+@Transactional
 public class RecurringExpenseService implements IRecurringExpenseService {
 
     @Inject
@@ -32,13 +32,8 @@ public class RecurringExpenseService implements IRecurringExpenseService {
     LoggedInUser loggedInUser;
     @Inject
     CategoryRepository categoryRepository;
-    @Inject
-    ExpenseRepository expenseRepository;
-    @Inject
-    ExpenseService expenseService;
 
     @Override
-    @Transactional
     public RecurringExpenseReadOnlyDTO save(RecurringExpenseInsertDTO recurringExpenseInsertDTO) {
         User currentUser = loggedInUser.getUser()
                 .orElseThrow(() -> new EntityInvalidArgumentsException("Cannot create salary: User not found"));
@@ -64,8 +59,7 @@ public class RecurringExpenseService implements IRecurringExpenseService {
     @Override
     public RecurringExpenseReadOnlyDTO findById(Long id) {
         Long userId = loggedInUser.getUserId();
-        RecurringExpense recurringExpense = recurringExpenseRepository.findRecurringExpenseById(id, userId)
-                .orElseThrow(() -> new EntityNotFoundException("Recurring expense not found"));
+        RecurringExpense recurringExpense = recurringExpenseRepository.findRecurringExpenseById(id,userId);
         if (recurringExpense == null) {
             throw new EntityNotFoundException("Recurring expense not found");
         }
@@ -74,11 +68,9 @@ public class RecurringExpenseService implements IRecurringExpenseService {
     }
 
     @Override
-    @Transactional
-    public RecurringExpenseReadOnlyDTO update(Long id, RecurringExpenseUpdateDTO recurringExpenseUpdateDTO) {
+    public RecurringExpenseReadOnlyDTO update(Long id,RecurringExpenseUpdateDTO recurringExpenseUpdateDTO) {
         Long userId = loggedInUser.getUserId();
-        RecurringExpense existingExpense = recurringExpenseRepository.findRecurringExpenseById(id, userId)
-                .orElseThrow(() -> new EntityNotFoundException("Recurring expense not found"));
+        RecurringExpense existingExpense = recurringExpenseRepository.findRecurringExpenseById(id,userId);
         if (existingExpense == null) {
             throw new EntityNotFoundException("Recurring expense not found");
         }
@@ -88,19 +80,16 @@ public class RecurringExpenseService implements IRecurringExpenseService {
     }
 
     @Override
-    @Transactional
-    public void deleteById(Long recurringExpenseId) {
-        Long userId = loggedInUser.getUserId();
-        RecurringExpense recurringExpense = recurringExpenseRepository.findRecurringExpenseById(recurringExpenseId, userId)
-                .orElseThrow(() -> new EntityNotFoundException("Recurring expense not found"));
-        boolean hasExpense = expenseService.existsByRecurringSource(recurringExpenseId,userId);
-        if (recurringExpense == null) {
-            throw new EntityNotFoundException("Recurring expense not found");
-        }
-        recurringExpenseRepository.delete(recurringExpense);
+    public void deleteById(Long id) {
+    Long userId = loggedInUser.getUserId();
+    RecurringExpense recurringExpense = recurringExpenseRepository.findRecurringExpenseById(id,userId);
+    if (recurringExpense == null) {
+        throw new EntityNotFoundException("Recurring expense not found");
+    }
+    recurringExpenseRepository.delete(recurringExpense);
     }
 
-    private void updateFields(RecurringExpense existExpense, RecurringExpenseUpdateDTO updateDTO) {
+    private void updateFields(RecurringExpense existExpense, RecurringExpenseUpdateDTO updateDTO){
         existExpense.setName(updateDTO.getName() != null ? updateDTO.getName() : existExpense.getName());
         existExpense.setDescription(updateDTO.getDescription() != null ? updateDTO.getDescription() : existExpense.getDescription());
         existExpense.setAmount(updateDTO.getAmount() != null ? updateDTO.getAmount() : existExpense.getAmount());
