@@ -2,7 +2,7 @@
 
 
 A REST API for tracking salaries, recurring expenses, and monthly summaries.  
-I built this project to solve a personal problem — I needed a way to keep track of my salary and fixed expenses. At the same time, I wanted to practice **Quarkus** on a real use case instead of making generic apps like a Todo list.
+I built this project to solve a personal problem — I needed a way to keep track of my salary and fixed expenses. At the same time, I wanted to practice **Quarkus** on a real use case.
 
 ![Quarkus](https://img.shields.io/badge/Quarkus-3.21.1-blue)
 ![Java](https://img.shields.io/badge/Java-21-orange)
@@ -84,9 +84,9 @@ The API uses JWT (JSON Web Token) for authentication. To access protected endpoi
 1. Register a user using the `/api/v1/users/register` endpoint
 2. Login with the created user at `/api/v1/users/login` to receive a JWT token
 3. Include the token in the `Authorization` header for subsequent requests:
-   ```
-   Authorization: Bearer your_jwt_token
-   ```
+```
+Authorization: Bearer your_jwt_token
+ ```
 
 ##  API Endpoints
 
